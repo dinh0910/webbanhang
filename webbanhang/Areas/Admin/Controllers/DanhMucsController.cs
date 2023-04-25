@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +16,12 @@ namespace webbanhang.Areas.Admin.Controllers
     public class DanhMucsController : Controller
     {
         private readonly webbanhangContext _context;
+        private readonly INotyfService _notifyService;
 
-        public DanhMucsController(webbanhangContext context)
+        public DanhMucsController(webbanhangContext context, INotyfService notyfService)
         {
             _context = context;
+            _notifyService = notyfService;
         }
 
         // GET: Admin/DanhMucs
@@ -26,30 +30,6 @@ namespace webbanhang.Areas.Admin.Controllers
               return _context.DanhMuc != null ? 
                           View(await _context.DanhMuc.ToListAsync()) :
                           Problem("Entity set 'webbanhangContext.DanhMuc'  is null.");
-        }
-
-        // GET: Admin/DanhMucs/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.DanhMuc == null)
-            {
-                return NotFound();
-            }
-
-            var danhMuc = await _context.DanhMuc
-                .FirstOrDefaultAsync(m => m.DanhMucID == id);
-            if (danhMuc == null)
-            {
-                return NotFound();
-            }
-
-            return View(danhMuc);
-        }
-
-        // GET: Admin/DanhMucs/Create
-        public IActionResult Create()
-        {
-            return View();
         }
 
         // POST: Admin/DanhMucs/Create
@@ -62,10 +42,12 @@ namespace webbanhang.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(danhMuc);
+                _notifyService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(danhMuc);
+            _notifyService.Error("Thêm thất bại!");
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Admin/DanhMucs/Edit/5
@@ -132,26 +114,11 @@ namespace webbanhang.Areas.Admin.Controllers
             if (danhMuc == null)
             {
                 return NotFound();
-            }
-
-            return View(danhMuc);
-        }
-
-        // POST: Admin/DanhMucs/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.DanhMuc == null)
+            } else
             {
-                return Problem("Entity set 'webbanhangContext.DanhMuc'  is null.");
-            }
-            var danhMuc = await _context.DanhMuc.FindAsync(id);
-            if (danhMuc != null)
-            {
+                _notifyService.Success("Xóa thành công!");
                 _context.DanhMuc.Remove(danhMuc);
             }
-            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

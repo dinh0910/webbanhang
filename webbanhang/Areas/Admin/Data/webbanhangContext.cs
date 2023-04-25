@@ -31,5 +31,13 @@ namespace webbanhang.Data
         public DbSet<webbanhang.Models.ChiTietDH>? ChiTietDH { get; set; }
 
         public DbSet<webbanhang.Models.ThuongHieu>? ThuongHieu { get; set; }
+
+        public DbSet<webbanhang.Models.NhapHang>? NhapHang { get; set; }
+
+        public DbSet<webbanhang.Models.ChiTietNH>? ChiTietNH { get; set; }
+
+        public DbSet<webbanhang.Models.DonViTinh>? DonViTinh { get; set; }
+
+        public DbSet<webbanhang.Models.NhaCungCap>? NhaCungCap { get; set; }
     }
 }

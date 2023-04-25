@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using webbanhang.Data;
 
@@ -11,9 +12,10 @@ using webbanhang.Data;
 namespace webbanhang.Migrations
 {
     [DbContext(typeof(webbanhangContext))]
-    partial class webbanhangContextModelSnapshot : ModelSnapshot
+    [Migration("20230425072743_Init1")]
+    partial class Init1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +31,6 @@ namespace webbanhang.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BannerID"), 1L, 1);
-
-                    b.Property<string>("AnhDau")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HinhAnh")
                         .HasColumnType("nvarchar(max)");

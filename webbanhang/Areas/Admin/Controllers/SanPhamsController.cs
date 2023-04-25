@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,16 +16,20 @@ namespace webbanhang.Areas.Admin.Controllers
     public class SanPhamsController : Controller
     {
         private readonly webbanhangContext _context;
+        private readonly INotyfService _notifyService;
 
-        public SanPhamsController(webbanhangContext context)
+        public SanPhamsController(webbanhangContext context, INotyfService notyfService)
         {
             _context = context;
+            _notifyService = notyfService;
         }
 
         // GET: Admin/SanPhams
         public async Task<IActionResult> Index()
         {
             var webbanhangContext = _context.SanPham.Include(s => s.DanhMuc).Include(s => s.ThuongHieu);
+            ViewData["DanhMucID"] = new SelectList(_context.DanhMuc, "DanhMucID", "TenDanhMuc");
+            ViewData["ThuongHieuID"] = new SelectList(_context.ThuongHieu, "ThuongHieuID", "TenThuongHieu");
             return View(await webbanhangContext.ToListAsync());
         }
 
@@ -47,14 +53,6 @@ namespace webbanhang.Areas.Admin.Controllers
             return View(sanPham);
         }
 
-        // GET: Admin/SanPhams/Create
-        public IActionResult Create()
-        {
-            ViewData["DanhMucID"] = new SelectList(_context.DanhMuc, "DanhMucID", "DanhMucID");
-            ViewData["ThuongHieuID"] = new SelectList(_context.Set<ThuongHieu>(), "ThuongHieuID", "ThuongHieuID");
-            return View();
-        }
-
         // POST: Admin/SanPhams/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -65,12 +63,14 @@ namespace webbanhang.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(sanPham);
+                _notifyService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DanhMucID"] = new SelectList(_context.DanhMuc, "DanhMucID", "DanhMucID", sanPham.DanhMucID);
-            ViewData["ThuongHieuID"] = new SelectList(_context.Set<ThuongHieu>(), "ThuongHieuID", "ThuongHieuID", sanPham.ThuongHieuID);
-            return View(sanPham);
+            ViewData["DanhMucID"] = new SelectList(_context.DanhMuc, "DanhMucID", "TenDanhMuc", sanPham.DanhMucID);
+            ViewData["ThuongHieuID"] = new SelectList(_context.ThuongHieu, "ThuongHieuID", "TenThuongHieu", sanPham.ThuongHieuID);
+            _notifyService.Error("Thêm thất bại!");
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Admin/SanPhams/Edit/5
@@ -87,7 +87,7 @@ namespace webbanhang.Areas.Admin.Controllers
                 return NotFound();
             }
             ViewData["DanhMucID"] = new SelectList(_context.DanhMuc, "DanhMucID", "DanhMucID", sanPham.DanhMucID);
-            ViewData["ThuongHieuID"] = new SelectList(_context.Set<ThuongHieu>(), "ThuongHieuID", "ThuongHieuID", sanPham.ThuongHieuID);
+            ViewData["ThuongHieuID"] = new SelectList(_context.ThuongHieu, "ThuongHieuID", "ThuongHieuID", sanPham.ThuongHieuID);
             return View(sanPham);
         }
 
@@ -124,7 +124,7 @@ namespace webbanhang.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DanhMucID"] = new SelectList(_context.DanhMuc, "DanhMucID", "DanhMucID", sanPham.DanhMucID);
-            ViewData["ThuongHieuID"] = new SelectList(_context.Set<ThuongHieu>(), "ThuongHieuID", "ThuongHieuID", sanPham.ThuongHieuID);
+            ViewData["ThuongHieuID"] = new SelectList(_context.ThuongHieu, "ThuongHieuID", "ThuongHieuID", sanPham.ThuongHieuID);
             return View(sanPham);
         }
 
@@ -144,25 +144,11 @@ namespace webbanhang.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
-            return View(sanPham);
-        }
-
-        // POST: Admin/SanPhams/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.SanPham == null)
+            else
             {
-                return Problem("Entity set 'webbanhangContext.SanPham'  is null.");
-            }
-            var sanPham = await _context.SanPham.FindAsync(id);
-            if (sanPham != null)
-            {
+                _notifyService.Success("Xóa thành công!");
                 _context.SanPham.Remove(sanPham);
             }
-            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

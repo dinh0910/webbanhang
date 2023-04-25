@@ -2,76 +2,137 @@
 
 @{
     ViewData["Title"] = "Index";
+    var i = 1;
 }
 
-<h1>Index</h1>
+<div class="container-fluid" id="container-wrapper">
+    <h1>Danh sách sản phẩm</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DanhMuc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ThuongHieu)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TenSanPham)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HinhAnh)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DonGia)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sale)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ThanhTien)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SoLuong)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DanhMuc.DanhMucID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThuongHieu.ThuongHieuID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TenSanPham)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HinhAnh)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DonGia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sale)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThanhTien)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SoLuong)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SanPhamID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SanPhamID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SanPhamID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <a role="button" data-bs-toggle="modal" data-bs-target="#modalCreate" class="btn btn-danger mb-1 text-white">Thêm mới</a>
+
+    <div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="modalCreateLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center mb-2">
+                        <span class="fw-bold fs-3" style="color:#fc544b">Thêm sản phẩm</span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="p-2">
+                        <form asp-action="Create" enctype="multipart/form-data">
+                            <div class="form-group mb-3">
+                                <label for="DanhMucID" class="control-label">Danh mục</label>
+                                <select name="DanhMucID" id="DanhMucID" class="form-control" asp-items="ViewBag.DanhMucID"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ThuongHieuID" class="control-label">Thương hiệu</label>
+                                <select name="ThuongHieuID" id="ThuongHieuID" class="form-control" asp-items="ViewBag.ThuongHieuID"></select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="TenSanPham" class="control-label mb-1">Tên sản phẩm</label>
+                                <input type="text" name="TenSanPham" id="TenSanPham" class="form-control" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="HinhAnh" class="control-label mb-1">Hình ảnh</label>
+                                <input type="file" name="file" id="HinhAnh" class="form-control" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="DonGia" class="control-label mb-1">Đơn giá</label>
+                                <input type="number" name="DonGia" id="DonGia" min="1000" class="form-control" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="Sale" class="control-label mb-1">Sale</label>
+                                <input type="number" name="Sale" id="Sale" min="0" value="0" class="form-control" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <input type="hidden" name="ThanhTien" id="ThanhTien" class="form-control" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <input type="hidden" name="SoLuong" value="0" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Thêm" class="btn btn-danger" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>
+                            Danh mục
+                        </th>
+                        <th>
+                            Thương hiệu
+                        </th>
+                        <th>
+                            Tên sản phẩm
+                        </th>
+                        <th>
+                            Hình ảnh
+                        </th>
+                        <th>
+                            Đơn giá
+                        </th>
+                        <th>
+                            Sale
+                        </th>
+                        <th>
+                            Thành tiền
+                        </th>
+                        <th>
+                            Số lượng
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@(i++)</td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DanhMuc.DanhMucID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ThuongHieu.ThuongHieuID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TenSanPham)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HinhAnh)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DonGia)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sale)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ThanhTien)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SoLuong)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.SanPhamID">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.SanPhamID">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.SanPhamID">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

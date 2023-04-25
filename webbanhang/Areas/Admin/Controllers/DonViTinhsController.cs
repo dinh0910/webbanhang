@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
@@ -13,35 +12,35 @@ using webbanhang.Models;
 namespace webbanhang.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ThuongHieusController : Controller
+    public class DonViTinhsController : Controller
     {
         private readonly webbanhangContext _context;
         private readonly INotyfService _notifyService;
 
-        public ThuongHieusController(webbanhangContext context, INotyfService notyfService)
+        public DonViTinhsController(webbanhangContext context, INotyfService notyfService)
         {
             _context = context;
             _notifyService = notyfService;
         }
 
-        // GET: Admin/ThuongHieus
+        // GET: Admin/DonViTinhs
         public async Task<IActionResult> Index()
         {
-              return _context.ThuongHieu != null ? 
-                          View(await _context.ThuongHieu.ToListAsync()) :
-                          Problem("Entity set 'webbanhangContext.ThuongHieu'  is null.");
+              return _context.DonViTinh != null ? 
+                          View(await _context.DonViTinh.ToListAsync()) :
+                          Problem("Entity set 'webbanhangContext.DonViTinh'  is null.");
         }
 
-        // POST: Admin/ThuongHieus/Create
+        // POST: Admin/DonViTinhs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ThuongHieuID,TenThuongHieu")] ThuongHieu thuongHieu)
+        public async Task<IActionResult> Create([Bind("DonViTinhID,DonVi")] DonViTinh donViTinh)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(thuongHieu);
+                _context.Add(donViTinh);
                 _notifyService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -50,30 +49,30 @@ namespace webbanhang.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/ThuongHieus/Edit/5
+        // GET: Admin/DonViTinhs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.ThuongHieu == null)
+            if (id == null || _context.DonViTinh == null)
             {
                 return NotFound();
             }
 
-            var thuongHieu = await _context.ThuongHieu.FindAsync(id);
-            if (thuongHieu == null)
+            var donViTinh = await _context.DonViTinh.FindAsync(id);
+            if (donViTinh == null)
             {
                 return NotFound();
             }
-            return View(thuongHieu);
+            return View(donViTinh);
         }
 
-        // POST: Admin/ThuongHieus/Edit/5
+        // POST: Admin/DonViTinhs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ThuongHieuID,TenThuongHieu")] ThuongHieu thuongHieu)
+        public async Task<IActionResult> Edit(int id, [Bind("DonViTinhID,DonVi")] DonViTinh donViTinh)
         {
-            if (id != thuongHieu.ThuongHieuID)
+            if (id != donViTinh.DonViTinhID)
             {
                 return NotFound();
             }
@@ -82,12 +81,12 @@ namespace webbanhang.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(thuongHieu);
+                    _context.Update(donViTinh);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ThuongHieuExists(thuongHieu.ThuongHieuID))
+                    if (!DonViTinhExists(donViTinh.DonViTinhID))
                     {
                         return NotFound();
                     }
@@ -98,34 +97,35 @@ namespace webbanhang.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(thuongHieu);
+            return View(donViTinh);
         }
 
-        // GET: Admin/ThuongHieus/Delete/5
+        // GET: Admin/DonViTinhs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.ThuongHieu == null)
+            if (id == null || _context.DonViTinh == null)
             {
                 return NotFound();
             }
 
-            var thuongHieu = await _context.ThuongHieu
-                .FirstOrDefaultAsync(m => m.ThuongHieuID == id);
-            if (thuongHieu == null)
+            var donViTinh = await _context.DonViTinh
+                .FirstOrDefaultAsync(m => m.DonViTinhID == id);
+            if (donViTinh == null)
             {
                 return NotFound();
-            } else
+            }
+            else
             {
                 _notifyService.Success("Xóa thành công!");
-                _context.ThuongHieu.Remove(thuongHieu);
+                _context.DonViTinh.Remove(donViTinh);
             }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ThuongHieuExists(int id)
+        private bool DonViTinhExists(int id)
         {
-          return (_context.ThuongHieu?.Any(e => e.ThuongHieuID == id)).GetValueOrDefault();
+          return (_context.DonViTinh?.Any(e => e.DonViTinhID == id)).GetValueOrDefault();
         }
     }
 }
