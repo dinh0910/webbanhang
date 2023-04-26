@@ -33,26 +33,6 @@ namespace webbanhang.Areas.Admin.Controllers
             return View(await webbanhangContext.ToListAsync());
         }
 
-        // GET: Admin/SanPhams/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.SanPham == null)
-            {
-                return NotFound();
-            }
-
-            var sanPham = await _context.SanPham
-                .Include(s => s.DanhMuc)
-                .Include(s => s.ThuongHieu)
-                .FirstOrDefaultAsync(m => m.SanPhamID == id);
-            if (sanPham == null)
-            {
-                return NotFound();
-            }
-
-            return View(sanPham);
-        }
-
         // POST: Admin/SanPhams/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -157,5 +137,29 @@ namespace webbanhang.Areas.Admin.Controllers
         {
           return (_context.SanPham?.Any(e => e.SanPhamID == id)).GetValueOrDefault();
         }
+
+        // GET: Admin/SanPhams/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.SanPham == null)
+            {
+                return NotFound();
+            }
+
+            var sanPham = await _context.SanPham
+                .Include(s => s.DanhMuc)
+                .Include(s => s.ThuongHieu)
+                .FirstOrDefaultAsync(m => m.SanPhamID == id);
+
+            ViewBag.thongso = _context.ThongSo;
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            return View(sanPham);
+        }
+
+
     }
 }

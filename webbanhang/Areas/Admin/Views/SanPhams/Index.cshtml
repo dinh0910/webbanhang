@@ -40,11 +40,13 @@
                             </div>
                             <div class="form-group mb-3">
                                 <label for="DonGia" class="control-label mb-1">Đơn giá</label>
-                                <input type="number" name="DonGia" id="DonGia" min="1000" class="form-control" />
+                                <input type="number" name="DonGia" id="DonGia" min="0" value="0"
+                                    oninput="tinhSale();" class="form-control" />
                             </div>
                             <div class="form-group mb-3">
                                 <label for="Sale" class="control-label mb-1">Sale</label>
-                                <input type="number" name="Sale" id="Sale" min="0" value="0" class="form-control" />
+                                <input type="number" name="Sale" id="Sale" min="0" value="0"
+                                    class="form-control" oninput="tinhSale();" />
                             </div>
                             <div class="form-group mb-3">
                                 <input type="hidden" name="ThanhTien" id="ThanhTien" class="form-control" />
@@ -101,10 +103,10 @@
                         <tr>
                             <td>@(i++)</td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.DanhMuc.DanhMucID)
+                                @Html.DisplayFor(modelItem => item.DanhMuc.TenDanhMuc)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ThuongHieu.ThuongHieuID)
+                                @Html.DisplayFor(modelItem => item.ThuongHieu.TenThuongHieu)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.TenSanPham)
@@ -136,3 +138,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    function tinhSale(){
+        var donGia = document.getElementById("DonGia").value;
+        var giamGia = document.getElementById("Sale").value;
+        document.getElementById("ThanhTien").value = donGia - (donGia * (giamGia / 100));
+    }
+</script>
