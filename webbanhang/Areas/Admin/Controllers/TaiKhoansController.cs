@@ -24,6 +24,7 @@ namespace webbanhang.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var webbanhangContext = _context.TaiKhoan.Include(t => t.QuyenHan);
+            ViewData["QuyenHanID"] = new SelectList(_context.QuyenHan, "QuyenHanID", "Ten");
             return View(await webbanhangContext.ToListAsync());
         }
 
