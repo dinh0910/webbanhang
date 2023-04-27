@@ -152,6 +152,7 @@ namespace webbanhang.Areas.Admin.Controllers
                 .FirstOrDefaultAsync(m => m.SanPhamID == id);
 
             ViewBag.thongso = _context.ThongSo;
+            ViewBag.hinhanh = _context.HinhAnh;
             if (sanPham == null)
             {
                 return NotFound();
@@ -160,6 +161,41 @@ namespace webbanhang.Areas.Admin.Controllers
             return View(sanPham);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Details(int id, [Bind("ThongSoID,SanPhamID,TenThongSo,NoiDung")] ThongSo thongSo,
+            IFormFile file, [Bind("HinhAnhID,SanPhamID,Anh")] HinhAnh hinhAnh)
+        {
+            if(thongSo.TenThongSo != null || thongSo.NoiDung != null)
+            {
+                _context.Update(thongSo);
+                await _context.SaveChangesAsync();
+            } else
+            {
+                hinhAnh.Anh = Upload(file);
+                _context.Update(hinhAnh);
+                await _context.SaveChangesAsync();
+            }
 
+            return RedirectToAction("Details", "SanPhams", routeValues: new { id });
+        }
+
+        public string Upload(IFormFile file)
+        {
+            string fn = null;
+
+            if (file != null)
+            {
+                // Phát sinh tên mới cho file để tránh trùng tên
+                fn = Guid.NewGuid().ToString() + "_" + file.FileName;
+                var path = $"wwwroot\\images\\products\\{fn}"; // đường dẫn lưu file
+                // upload file lên đường dẫn chỉ định
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+            }
+            return fn;
+        }
     }
 }

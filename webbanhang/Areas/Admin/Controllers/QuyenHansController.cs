@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace webbanhang.Areas.Admin.Controllers
     public class QuyenHansController : Controller
     {
         private readonly webbanhangContext _context;
+        private readonly INotyfService _notifyService;
 
-        public QuyenHansController(webbanhangContext context)
+        public QuyenHansController(webbanhangContext context, INotyfService notyfService)
         {
             _context = context;
+            _notifyService = notyfService;
         }
 
         // GET: Admin/QuyenHans
@@ -26,30 +29,6 @@ namespace webbanhang.Areas.Admin.Controllers
               return _context.QuyenHan != null ? 
                           View(await _context.QuyenHan.ToListAsync()) :
                           Problem("Entity set 'webbanhangContext.QuyenHan'  is null.");
-        }
-
-        // GET: Admin/QuyenHans/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.QuyenHan == null)
-            {
-                return NotFound();
-            }
-
-            var quyenHan = await _context.QuyenHan
-                .FirstOrDefaultAsync(m => m.QuyenHanID == id);
-            if (quyenHan == null)
-            {
-                return NotFound();
-            }
-
-            return View(quyenHan);
-        }
-
-        // GET: Admin/QuyenHans/Create
-        public IActionResult Create()
-        {
-            return View();
         }
 
         // POST: Admin/QuyenHans/Create
@@ -62,10 +41,12 @@ namespace webbanhang.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(quyenHan);
+                _notifyService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(quyenHan);
+            _notifyService.Error("Thêm thất bại!");
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Admin/QuyenHans/Edit/5
@@ -133,25 +114,11 @@ namespace webbanhang.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
-            return View(quyenHan);
-        }
-
-        // POST: Admin/QuyenHans/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.QuyenHan == null)
+            else
             {
-                return Problem("Entity set 'webbanhangContext.QuyenHan'  is null.");
-            }
-            var quyenHan = await _context.QuyenHan.FindAsync(id);
-            if (quyenHan != null)
-            {
+                _notifyService.Success("Xóa thành công!");
                 _context.QuyenHan.Remove(quyenHan);
             }
-            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

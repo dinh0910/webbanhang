@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace webbanhang.Areas.Admin.Controllers
     public class TaiKhoansController : Controller
     {
         private readonly webbanhangContext _context;
+        private readonly INotyfService _notifyService;
 
-        public TaiKhoansController(webbanhangContext context)
+        public TaiKhoansController(webbanhangContext context, INotyfService notyfService)
         {
             _context = context;
+            _notifyService = notyfService;
         }
 
         // GET: Admin/TaiKhoans
@@ -26,32 +29,6 @@ namespace webbanhang.Areas.Admin.Controllers
             var webbanhangContext = _context.TaiKhoan.Include(t => t.QuyenHan);
             ViewData["QuyenHanID"] = new SelectList(_context.QuyenHan, "QuyenHanID", "Ten");
             return View(await webbanhangContext.ToListAsync());
-        }
-
-        // GET: Admin/TaiKhoans/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.TaiKhoan == null)
-            {
-                return NotFound();
-            }
-
-            var taiKhoan = await _context.TaiKhoan
-                .Include(t => t.QuyenHan)
-                .FirstOrDefaultAsync(m => m.TaiKhoanID == id);
-            if (taiKhoan == null)
-            {
-                return NotFound();
-            }
-
-            return View(taiKhoan);
-        }
-
-        // GET: Admin/TaiKhoans/Create
-        public IActionResult Create()
-        {
-            ViewData["QuyenHanID"] = new SelectList(_context.QuyenHan, "QuyenHanID", "QuyenHanID");
-            return View();
         }
 
         // POST: Admin/TaiKhoans/Create
@@ -64,11 +41,13 @@ namespace webbanhang.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(taiKhoan);
+                _notifyService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["QuyenHanID"] = new SelectList(_context.QuyenHan, "QuyenHanID", "QuyenHanID", taiKhoan.QuyenHanID);
-            return View(taiKhoan);
+            _notifyService.Error("Thêm thất bại!");
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Admin/TaiKhoans/Edit/5
@@ -139,25 +118,11 @@ namespace webbanhang.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
-            return View(taiKhoan);
-        }
-
-        // POST: Admin/TaiKhoans/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.TaiKhoan == null)
+            else
             {
-                return Problem("Entity set 'webbanhangContext.TaiKhoan'  is null.");
-            }
-            var taiKhoan = await _context.TaiKhoan.FindAsync(id);
-            if (taiKhoan != null)
-            {
+                _notifyService.Success("Xóa thành công!");
                 _context.TaiKhoan.Remove(taiKhoan);
             }
-            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

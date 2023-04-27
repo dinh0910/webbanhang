@@ -128,8 +128,26 @@
                             </td>
                             <td>
                                 <a asp-action="Edit" asp-route-id="@item.SanPhamID">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.SanPhamID">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.SanPhamID">Delete</a>
+                                <a class="btn bg-gradient-danger" asp-action="Details" asp-route-id="@item.SanPhamID">
+                                    <i class="fa-solid fa-circle-info text-white"></i>
+                                </a>                               
+                                <a class="btn bg-gradient-danger" role="button" data-bs-toggle="modal" data-bs-target="#modalDelete@(i)">
+                                    <i class="fa-solid fa-trash text-white"></i>
+                                </a>
+                                <div class="modal fade" id="modalDelete@(i)" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Bạn có chắc chắn xóa?</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="/Admin/SanPhams/Delete/@item.SanPhamID" role="button" class="btn btn-danger">Xóa</a>
+                                                <a role="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Hủy bỏ</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     }

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var i = 1;
 }
 
 <div class="container-fluid" id="container-wrapper">
@@ -14,7 +15,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="text-center mb-2">
-                        <span class="fw-bold fs-3" style="color:#fc544b">Thêm sản phẩm</span>
+                        <span class="fw-bold fs-3" style="color:#fc544b">Thêm tài khoản</span>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -30,8 +31,8 @@
                                 <input type="text" name="MatKhau" id="MatKhau" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <label for="QuyenHanID" class="control-label">Thương hiệu</label>
-                                <select name="QuyenHanID" id="QuyenHanID" class="form-control" asp-items="ViewBag.QuyenID"></select>
+                                <label for="QuyenHanID" class="control-label">Quyền hạn</label>
+                                <select name="QuyenHanID" id="QuyenHanID" class="form-control" asp-items="ViewBag.QuyenHanID"></select>
                             </div>
                             <div class="form-group">
                                 <input type="submit" value="Thêm" class="btn btn-danger" />
@@ -48,14 +49,12 @@
             <table class="table">
                 <thead>
                     <tr>
+                        <th>STT</th>
                         <th>
-                            @Html.DisplayNameFor(model => model.TenTaiKhoan)
+                            Tên tài khoản
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.MatKhau)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.QuyenHan)
+                            Quyền hạn
                         </th>
                         <th></th>
                     </tr>
@@ -65,10 +64,10 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.TenTaiKhoan)
+                                @(i++)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.MatKhau)
+                                @Html.DisplayFor(modelItem => item.TenTaiKhoan)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.QuyenHan.QuyenHanID)
@@ -76,7 +75,22 @@
                             <td>
                                 <a asp-action="Edit" asp-route-id="@item.TaiKhoanID">Edit</a> |
                                 <a asp-action="Details" asp-route-id="@item.TaiKhoanID">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.TaiKhoanID">Delete</a>
+                                <a class="btn bg-gradient-danger" role="button" data-bs-toggle="modal" data-bs-target="#modalDelete@(i)">
+                                    <i class="fa-solid fa-trash text-white"></i>
+                                </a>
+                                <div class="modal fade" id="modalDelete@(i)" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Bạn có chắc chắn xóa?</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="/Admin/TaiKhoans/Delete/@item.TaiKhoanID" role="button" class="btn btn-danger">Xóa</a>
+                                                <a role="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Hủy bỏ</a>
+                                            </div>
+                                        </div>
+                                    </div>
                             </td>
                         </tr>
                     }

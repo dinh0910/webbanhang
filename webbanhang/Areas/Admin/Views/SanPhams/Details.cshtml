@@ -3,18 +3,22 @@
 @{
     ViewData["Title"] = "Details";
     var ts = ViewBag.thongso as IQueryable<webbanhang.Models.ThongSo>;
+    var ha = ViewBag.hinhanh as IQueryable<webbanhang.Models.HinhAnh>;
     var i = 1;
     var j = 1;
 }
 
+<a role="button" data-bs-toggle="modal" data-bs-target="#modalTS" class="btn btn-danger mb-1 text-white">Thêm thông số</a>
+<a role="button" data-bs-toggle="modal" data-bs-target="#modalHA" class="btn btn-danger mb-1 text-white">Thêm hình ảnh</a>
+
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-sm-6">
         <div class="card mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Thông số sản phẩm @Model.TenSanPham</h6>
             </div>
             <div class="table-responsive p-3">
-                <table class="table align-items-center table-flush" id="dataTable">
+                <table class="table align-items-center table-flush">
                     <thead class="thead-light">
                         <tr>
                             <th>#</th>
@@ -42,7 +46,39 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
-
+    <div class="col-sm-6">
+        <div class="card mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Hình ảnh sản phẩm @Model.TenSanPham</h6>
+            </div>
+            <div class="table-responsive p-3">
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Hình ảnh</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ha)
+                        {
+                            if (item.SanPhamID == Model.SanPhamID)
+                            {
+                                <tr>
+                                    <td>
+                                        @(
+                                            j++
+                                            )
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
