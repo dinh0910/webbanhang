@@ -6,6 +6,9 @@
 
         public string MatKhau { get; set; }
 
-
+        internal static Task SignOutAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

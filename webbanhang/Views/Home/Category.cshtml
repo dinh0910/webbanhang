@@ -1,0 +1,87 @@
+﻿@model IEnumerable<webbanhang.Models.SanPham>
+
+@{
+    var dm = (DanhMuc)ViewBag.dm;
+    var danhmuc = ViewBag.danhmuc as IQueryable<webbanhang.Models.DanhMuc>;
+    var thuonghieu = ViewBag.thuonghieu as IQueryable<webbanhang.Models.ThuongHieu>;
+}
+
+<section class="section-content padding-y">
+    <div class="container">
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <ol class="breadcrumb float-left">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item acvite">@dm.TenDanhMuc</li>
+                </ol>
+            </div> <!-- card-body .// -->
+        </div> <!-- card.// -->
+
+        <div class="row">
+            <aside class="col-md-2">
+
+                <article class="filter-group">
+                    <h6 class="title">
+                        <a href="#" class="dropdown-toggle" data-toggle="collapse" data-target="#collapse_1"> Danh mục </a>
+                    </h6>
+                    <div class="filter-content collapse show" id="collapse_1">
+                        <div class="inner">
+                            <ul class="list-menu">
+                                @foreach(var item in danhmuc){
+                                    <li><a asp-action="Caterogy" asp-route-id="@item.DanhMucID">@item.TenDanhMuc</a></li>
+                                }
+                            </ul>
+                        </div> <!-- inner.// -->
+                    </div>
+                </article> <!-- filter-group  .// -->
+
+                <article class="filter-group">
+                    <h6 class="title">
+                        <a href="#" class="dropdown-toggle" data-toggle="collapse" data-target="#collapse_2"> Brands </a>
+                    </h6>
+                    <div class="filter-content collapse show" id="collapse_2">
+                        <div class="inner">
+                            <ul class="list-menu">
+                                @foreach (var item in thuonghieu)
+                                {
+                                    <li><a asp-action="TradeMark" asp-route-id="@item.ThuongHieuID">@item.TenThuongHieu</a></li>
+                                }
+                            </ul>
+                        </div> <!-- inner.// -->
+                    </div>
+                </article> <!-- filter-group .// -->
+            </aside>
+
+            <main class="col-md-10">
+                <header class="mb-3">
+                    <div class="form-inline">
+                        <strong class="mr-md-auto">Có @Model.Count() sản phẩm được tìm thấy </strong>
+                    </div>
+                </header><!-- sect-heading -->
+
+                <div class="row mt-3">
+                    @foreach(var item in Model){
+                        <div class="col-sm-3">
+                            <div class="p-2">
+                                <div class="card w-100 shadow-lg" style="border-radius: 12px;">
+                                    <img src="~/images/products/@item.HinhAnh" class="card-img-top">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item.TenSanPham</h5>
+                                        <p>
+                                            @Html.DisplayFor(modelItem => item.ThanhTien)
+                                        </p>
+                                        <a href="#" class="btn btn-danger"><i class="fa-solid fa-cart-shopping"></i></a>
+                                        <a href="#" class="btn btn-light"><i class="fa-regular fa-heart text-dark"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            </main> <!-- col.// -->
+
+        </div>
+    </div>
+</section>

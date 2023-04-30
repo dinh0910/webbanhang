@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using webbanhang.Data;
+using webbanhang.Libs;
 using webbanhang.Models;
 
 namespace webbanhang.Areas.Admin.Controllers
@@ -36,16 +37,17 @@ namespace webbanhang.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TaiKhoanID,TenTaiKhoan,MatKhau,QuyenHanID")] TaiKhoan taiKhoan)
+        public async Task<IActionResult> Create([Bind("TaiKhoanID,TenTaiKhoan,MatKhau,HoTen,Sdt,DiaChi,QuyenHanID")] TaiKhoan taiKhoan)
         {
             if (ModelState.IsValid)
             {
+                taiKhoan.MatKhau = SHA1.ComputeHash(taiKhoan.MatKhau);
                 _context.Add(taiKhoan);
                 _notifyService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["QuyenHanID"] = new SelectList(_context.QuyenHan, "QuyenHanID", "QuyenHanID", taiKhoan.QuyenHanID);
+            ViewData["QuyenHanID"] = new SelectList(_context.QuyenHan, "QuyenHanID", "Ten", taiKhoan.QuyenHanID);
             _notifyService.Error("Thêm thất bại!");
             return RedirectToAction(nameof(Index));
         }
@@ -63,7 +65,7 @@ namespace webbanhang.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["QuyenHanID"] = new SelectList(_context.QuyenHan, "QuyenHanID", "QuyenHanID", taiKhoan.QuyenHanID);
+            ViewData["QuyenHanID"] = new SelectList(_context.QuyenHan, "QuyenHanID", "Ten", taiKhoan.QuyenHanID);
             return View(taiKhoan);
         }
 
@@ -72,7 +74,7 @@ namespace webbanhang.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TaiKhoanID,TenTaiKhoan,MatKhau,QuyenHanID")] TaiKhoan taiKhoan)
+        public async Task<IActionResult> Edit(int id, [Bind("TaiKhoanID,TenTaiKhoan,MatKhau,HoTen,Sdt,DiaChi,QuyenHanID")] TaiKhoan taiKhoan)
         {
             if (id != taiKhoan.TaiKhoanID)
             {
@@ -83,6 +85,7 @@ namespace webbanhang.Areas.Admin.Controllers
             {
                 try
                 {
+                    taiKhoan.MatKhau = SHA1.ComputeHash(taiKhoan.MatKhau);
                     _context.Update(taiKhoan);
                     await _context.SaveChangesAsync();
                 }
@@ -99,7 +102,7 @@ namespace webbanhang.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["QuyenHanID"] = new SelectList(_context.QuyenHan, "QuyenHanID", "QuyenHanID", taiKhoan.QuyenHanID);
+            ViewData["QuyenHanID"] = new SelectList(_context.QuyenHan, "QuyenHanID", "Ten", taiKhoan.QuyenHanID);
             return View(taiKhoan);
         }
 

@@ -38,10 +38,11 @@ namespace webbanhang.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SanPhamID,DanhMucID,ThuongHieuID,TenSanPham,HinhAnh,DonGia,Sale,ThanhTien,SoLuong")] SanPham sanPham)
+        public async Task<IActionResult> Create(IFormFile file, [Bind("SanPhamID,DanhMucID,ThuongHieuID,TenSanPham,HinhAnh,DonGia,Sale,ThanhTien,SoLuong")] SanPham sanPham)
         {
             if (ModelState.IsValid)
             {
+                sanPham.HinhAnh = Upload(file);
                 _context.Add(sanPham);
                 _notifyService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
@@ -76,7 +77,7 @@ namespace webbanhang.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SanPhamID,DanhMucID,ThuongHieuID,TenSanPham,HinhAnh,DonGia,Sale,ThanhTien,SoLuong")] SanPham sanPham)
+        public async Task<IActionResult> Edit(IFormFile file, int id, [Bind("SanPhamID,DanhMucID,ThuongHieuID,TenSanPham,HinhAnh,DonGia,Sale,ThanhTien,SoLuong")] SanPham sanPham)
         {
             if (id != sanPham.SanPhamID)
             {
@@ -87,6 +88,10 @@ namespace webbanhang.Areas.Admin.Controllers
             {
                 try
                 {
+                    if(file != null)
+                    {
+                        sanPham.HinhAnh = Upload(file);
+                    }
                     _context.Update(sanPham);
                     await _context.SaveChangesAsync();
                 }

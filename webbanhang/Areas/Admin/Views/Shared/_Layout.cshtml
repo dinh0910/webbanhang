@@ -4,9 +4,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - webbanhang</title>
+    <link href="~/images/logo.png" rel="icon">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="~/css/ruang-admin.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.2/b-2.3.4/fc-4.2.1/sc-2.1.0/sb-1.4.0/sp-2.1.1/sl-1.6.0/datatables.min.css" />
+
+    <style>
+        .page-item.active .page-link {
+            z-index: 1;
+            color: #fff;
+            background-color: #fc544b;
+            border-color: #fc544b;
+        }
+        .page-link {
+            position: relative;
+            display: block;
+            padding: 0.5rem 0.75rem;
+            margin-left: -1px;
+            line-height: 1.25;
+            color: #fc544b;
+            background-color: #fff;
+            border: 1px solid #dddfeb;
+            -webkit-box-shadow: 0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.2) !important;
+            box-shadow: 0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.2) !important;
+        }
+    </style>
+
 </head>
 <body id="page-top">
     <div id="wrapper">
@@ -27,8 +51,11 @@
     <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="~/js/ruang-admin.min.js"></script>
-    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    @*<script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>*@
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.2/b-2.3.4/fc-4.2.1/sc-2.1.0/sb-1.4.0/sp-2.1.1/sl-1.6.0/datatables.min.js"></script>
+
 
     <script src="https://kit.fontawesome.com/819401a432.js" crossorigin="anonymous"></script>
 
