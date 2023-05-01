@@ -62,6 +62,38 @@ namespace webbanhang.Controllers
             return View(TaiKhoan);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SignUp([Bind("Id,TenTaiKhoan,MatKhau")] TaiKhoan TaiKhoan)
+        {
+            if (ModelState.IsValid)
+            {
+                var check = _context.TaiKhoan.FirstOrDefault(r => r.TenTaiKhoan == TaiKhoan.TenTaiKhoan);
+                if (check == null)
+                {
+                    if (RegexPassword.Validation(TaiKhoan.MatKhau))
+                    {
+                        TaiKhoan.MatKhau = SHA1.ComputeHash(TaiKhoan.MatKhau);
+                        _context.Add(TaiKhoan);
+                        await _context.SaveChangesAsync();
+                        _notifyService.Success("Đăng ký tài khoản thành công!");
+                        return RedirectToAction("Login", "Home");
+                    }
+                    else
+                    {
+                        _notifyService.Error("Mật khẩu phải nhiều hơn 8 ký tự, ít nhất 1 chữ thường 1 chữ in hoa, 1 chữ số, 1 ký tự đặc biệt!");
+                        return RedirectToAction("SignUp", "Home");
+                    }
+                }
+                else
+                {
+                    _notifyService.Error("Tên đăng nhập đã tồn tại. Bạn hãy nhập tên khác!");
+                    return RedirectToAction("SignUp", "Home");
+                }
+            }
+            return RedirectToAction("SignUp", "Home");
+        }
+
         public async Task<IActionResult> Index()
         {
             var sp = _context.SanPham.Include(s => s.DanhMuc).Include(s => s.ThuongHieu);
@@ -76,7 +108,20 @@ namespace webbanhang.Controllers
             ViewBag.thuonghieu = _context.ThuongHieu;
             return View();
         }
-        
+
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Remove("_TaiKhoanIDU");
+            //HttpContext.Session.Remove("_Hoten");
+            HttpContext.Session.Remove("_TenTaiKhoanU");
+            HttpContext.Session.Remove("_MatKhauU");
+            //HttpContext.Session.Remove("_Quyen");
+            //HttpContext.Session.Remove("_HinhAnh");
+            //HttpContext.Session.Remove("_Email");
+
+            return RedirectToAction("Index", "Home");
+        }
+
         public IActionResult SignUp()
         {
             ViewBag.danhmuc = _context.DanhMuc;
@@ -96,11 +141,16 @@ namespace webbanhang.Controllers
             return View(await category.ToListAsync());
         }
 
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details(int? id)
         {
+            var sp = _context.SanPham
+                .Include(s => s.DanhMuc).Include(s => s.ThuongHieu)       
+                .FirstOrDefault(s => s.SanPhamID == id);
             ViewBag.danhmuc = _context.DanhMuc;
             ViewBag.thuonghieu = _context.ThuongHieu;
-            return View();
+            ViewBag.hinhanh = _context.HinhAnh.Include(ha => ha.SanPham);
+            ViewBag.thongso = _context.ThongSo.Include(so => so.SanPham);   
+            return View(sp);
         }
 
         public async Task<IActionResult> TradeMark(int? id)
@@ -164,6 +214,7 @@ namespace webbanhang.Controllers
             return RedirectToAction(nameof(ViewCart));
         }
 
+        //[Route("/updateitem", Name = "updateitem")]
         public async Task<IActionResult> UpdateItem(int id, int quantity)
         {
             var cart = GetCartItems();
@@ -189,6 +240,7 @@ namespace webbanhang.Controllers
             return RedirectToAction(nameof(ViewCart));
         }
 
+        //[Route("/viewcart", Name = "viewcart")]
         public IActionResult ViewCart()
         {
             ViewBag.danhmuc = _context.DanhMuc;
@@ -203,13 +255,13 @@ namespace webbanhang.Controllers
             return View(GetCartItems());
         }
 
-        public async Task<IActionResult> CreateBill(string Ten, string SoDienThoai, string DiaChi, string GhiChu)
+        public async Task<IActionResult> CreateBill(string HoTen, string Sdt, string DiaChi, string GhiChu)
         {
             // lưu hóa đơn
             var bill = new DonDatHang();
             bill.NgayLap = DateTime.Now;
-            bill.HoTen = Ten;
-            bill.Sdt = SoDienThoai;
+            bill.HoTen = HoTen;
+            bill.Sdt = Sdt;
             bill.DiaChi = DiaChi;
             bill.GhiChu = GhiChu;
 
@@ -246,6 +298,14 @@ namespace webbanhang.Controllers
             ViewBag.danhmuc = _context.DanhMuc;
             ViewBag.thuonghieu = _context.ThuongHieu;
             return View();
+        }
+
+        public async Task<IActionResult> Search(string? search)
+        {
+            var sp = _context.SanPham.Where(s => s.TenSanPham.Contains(search));
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
+            return View(await sp.ToListAsync());
         }
     }
 }

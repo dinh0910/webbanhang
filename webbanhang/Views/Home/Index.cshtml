@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Home Page";
     var dm = ViewBag.danhmuc as IQueryable<webbanhang.Models.DanhMuc>;
+    var i = 1;
+    var j = 1;
 }
 
     <section class="section-main padding-y">
@@ -73,17 +75,23 @@
         </div> <!-- col.// -->
         <div class="row no-gutters items-wrap">
             @foreach(var item in Model){
-                <div class="col-md col-6">
-                    <figure class="card-product-grid card-sm">
-                        <a href="" class="img-wrap">
-                            <img src="~/Content/images/items/1.jpg">
-                        </a>
-                        <div class="text-wrap p-3">
-                            <a href="#" class="title">@item.TenSanPham</a>
-                            <span class="badge badge-danger"> -@item.Sale% </span>
+                @if (item.Sale != 0)
+                {
+                    @if (j <= 4)
+                    {
+                        <div class="col-md-3 col-6">
+                            <figure class="card-product-grid card-sm">
+                                <a href="" class="img-wrap">
+                                    <img src="~/images/products/@item.HinhAnh">
+                                </a>
+                                <div class="text-wrap p-3">
+                                    <a href="#" class="title">@item.TenSanPham</a>
+                                    <span class="badge badge-danger"> -@item.Sale% </span>
+                                </div>
+                            </figure>
                         </div>
-                    </figure>
-                </div> <!-- col.// -->
+                    }
+                }
             }
         </div>
     </div>
@@ -96,17 +104,22 @@
     </header>
 
     <div class="row row-sm">
-
-        <div class="col-xl-2 col-lg-3 col-md-4 col-6">
-            <div href="#" class="card card-sm card-product-grid">
-                <a href="#" class="img-wrap"> <img src="~/Content/images/items/"> </a>
-                <figcaption class="info-wrap">
-                    <a href="#" class="title"></a>
-                    <div class="price mt-1"></div> <!-- price-wrap.// -->
-                </figcaption>
-            </div>
-        </div> <!-- col.// -->
-    </div> <!-- row.// -->
+        @foreach(var item in Model){
+            @if (i <= 12)
+            {
+                <div class="col-xl-2 col-lg-3 col-md-4 col-6">
+                    <div href="#" class="card card-sm card-product-grid">
+                        <a href="#" class="img-wrap"> <img src="~/images/products/@item.HinhAnh"> </a>
+                        <figcaption class="info-wrap">
+                            <a href="#" class="title">@item.TenSanPham</a>
+                            <div class="price mt-1">@Html.DisplayFor(modelItem => item.ThanhTien)</div>
+                        </figcaption>
+                    </div>
+                </div>
+                i++;
+            }
+        }
+    </div>
 </section>
 
 <script>

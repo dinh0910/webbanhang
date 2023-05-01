@@ -81,6 +81,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>STT</th>
+                                <th></th>
                                 <th>
                                     Danh mục
                                 </th>
@@ -105,7 +106,6 @@
                                 <th>
                                     Số lượng
                                 </th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -113,33 +113,9 @@
                             {
                                 <tr>
                                     <td>@(i++)</td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DanhMuc.TenDanhMuc)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ThuongHieu.TenThuongHieu)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.TenSanPham)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.HinhAnh)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DonGia)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Sale)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ThanhTien)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.SoLuong)
-                                    </td>
-                                    <td>
+                                    <td style="min-width: 150px;">
                                         <a asp-action="Edit" asp-route-id="@item.SanPhamID" class="btn bg-warning"><i class="fa-solid fa-pen-to-square text-white"></i></a>
-                                        <a class="btn bg-primary mx-3" asp-action="Details" asp-route-id="@item.SanPhamID">
+                                        <a class="btn bg-primary" asp-action="Details" asp-route-id="@item.SanPhamID">
                                             <i class="fa-solid fa-circle-info text-white"></i>
                                         </a>
                                         <a class="btn bg-danger" role="button" data-bs-toggle="modal" data-bs-target="#modalDelete@(i)">
@@ -159,6 +135,30 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DanhMuc.TenDanhMuc)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ThuongHieu.TenThuongHieu)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TenSanPham)
+                                    </td>
+                                    <td>
+                                        <img src="~/images/products/@Html.DisplayFor(modelItem => item.HinhAnh)" class="img-thumbnail" width="150" height="100" />
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DonGia)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Sale)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ThanhTien)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SoLuong)
                                     </td>
                                 </tr>
                             }

@@ -1,10 +1,86 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+﻿@model IEnumerable<webbanhang.Models.SanPham>
 
-</body>
-</html>
+@{
+    var danhmuc = ViewBag.danhmuc as IQueryable<webbanhang.Models.DanhMuc>;
+    var thuonghieu = ViewBag.thuonghieu as IQueryable<webbanhang.Models.ThuongHieu>;
+}
+
+<section class="section-content padding-y">
+    <div class="container">
+
+        <div class="row mt-3">
+            <aside class="col-md-2">
+                <article class="filter-group">
+                    <h6 class="title">
+                        <a href="#" class="dropdown-toggle" data-toggle="collapse" data-target="#collapse_1"> Danh mục </a>
+                    </h6>
+                    <div class="filter-content collapse show" id="collapse_1">
+                        <div class="inner">
+                            <ul class="list-menu">
+                                @foreach (var item in danhmuc)
+                                {
+                                    <li><a asp-action="Caterogy" asp-route-id="@item.DanhMucID">@item.TenDanhMuc</a></li>
+                                }
+                            </ul>
+                        </div> <!-- inner.// -->
+                    </div>
+                </article> <!-- filter-group  .// -->
+
+                <article class="filter-group">
+                    <h6 class="title">
+                        <a href="#" class="dropdown-toggle" data-toggle="collapse" data-target="#collapse_2"> Brands </a>
+                    </h6>
+                    <div class="filter-content collapse show" id="collapse_2">
+                        <div class="inner">
+                            <ul class="list-menu">
+                                @foreach (var item in thuonghieu)
+                                {
+                                    <li><a asp-action="TradeMark" asp-route-id="@item.ThuongHieuID">@item.TenThuongHieu</a></li>
+                                }
+                            </ul>
+                        </div> <!-- inner.// -->
+                    </div>
+                </article> <!-- filter-group .// -->
+            </aside>
+
+            <main class="col-md-10">
+                <header class="mb-3">
+                    <div class="form-inline">
+                        <strong class="mr-md-auto">Có @Model.Count() sản phẩm được tìm thấy </strong>
+                    </div>
+                </header><!-- sect-heading -->
+
+                <div class="row mt-3">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-sm-3">
+                            <div class="p-2">
+                                <div class="card w-100 shadow-lg" style="border-radius: 12px;">
+                                    <img src="~/images/products/@item.HinhAnh" class="card-img-top">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a asp-action="Details" asp-route-id="@item.SanPhamID" role="button">@item.TenSanPham</a>
+                                        </h5>
+                                        <p>
+                                            @Html.DisplayFor(modelItem => item.ThanhTien)
+                                        </p>
+                                        <div class="d-grid p-2">
+                                            @if (item.SoLuong > 0)
+                                            {
+                                                <a asp-action="AddToCart" asp-route-id="@item.SanPhamID" class="btn btn-danger"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-danger disabled text-white"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </main> <!-- col.// -->
+        </div>
+    </div>
+</section>

@@ -14,7 +14,7 @@
 
         public string? DiaChi { get; set; }
 
-        public int QuyenHanID { get; set; }
+        public int QuyenHanID { get; set; } = 3;
         public QuyenHan? QuyenHan { get; set; }
     }
 }

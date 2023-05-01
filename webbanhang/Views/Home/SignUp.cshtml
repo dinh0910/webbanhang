@@ -6,7 +6,7 @@
                 <span style="color: #fc544b;">ĐĂNG KÝ TÀI KHOẢN</span>
             </div>
             <div class="p-5">
-                <form asp-antiforgery="true" action="/Home/Login" method="post">
+                <form asp-antiforgery="true" asp-action="SignUp" method="post">
                     <div class="form-floating mb-3">
                         <input type="text" name="TenTaiKhoan" class="form-control" id="floatingInput" placeholder="Tài khoản" required />
                         <label for="floatingInput">Tài khoản</label>

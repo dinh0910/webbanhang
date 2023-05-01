@@ -1,6 +1,10 @@
-﻿@{
+﻿@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
     var dm = ViewBag.danhmuc as IQueryable<webbanhang.Models.DanhMuc>;
     var th = ViewBag.thuonghieu as IQueryable<webbanhang.Models.ThuongHieu>;
+    var c = 0;
 }
 
 <header class="section-header" style="background-color: #FC544B;">
@@ -27,41 +31,48 @@
                 </div> <!-- col.// -->
                 <div class="col-xl-4">
                     <div class="widgets-wrap float-md-right">
+                        @{
+                            var session = HttpContextAccessor.HttpContext.Session;
+                            string jsoncart = session.GetString(webbanhang.Controllers.HomeController.CARTKEY);
+                            if (jsoncart != null)
+                            {
+                                var cart = JsonConvert.DeserializeObject<List<CartItem>>(jsoncart);
+                                c = cart.Count;
+                            }
+                        }
+
                         <div class="widget-header mr-3">
-                            <a href="#" class="widget-view">
-                                <div class="icon-area">
-                                    <i class="fa fa-comment-dots text-white"></i>
-                                    <span class="notify">1</span>
-                                </div>
-                                @*<small class="text-white"> Tin nhắn </small>*@
-                            </a>
-                        </div>
-                        <div class="widget-header mr-3">
-                            <a href="#" class="widget-view">
-                                <div class="icon-area">
-                                    <i class="fa fa-store text-white"></i>
-                                </div>
-                                @*<small class="text-white"> Đơn hàng </small>*@
-                            </a>
-                        </div>
-                        <div class="widget-header mr-3">
-                            <a href="#" class="widget-view">
+                            <a asp-controller="Home" asp-action="ViewCart" class="widget-view">
                                 <div class="icon-area">
                                     <i class="fa fa-shopping-cart text-white"></i>
+                                    <span class="notify">@c</span>
                                 </div>
                                 @*<small class="text-white"> Giỏ hàng </small>*@
                             </a>
                         </div>
                         <div class="widget-header">
-                            <a href="home/login" class="widget-view">
-                                <div class="icon-area">
-                                    <i class="fa fa-user text-white"></i>
+                            @if (Context.Session.GetInt32("_TaiKhoanIDU") == null)
+                            {
+                                <a asp-controller="Home" asp-action="Login" class="widget-view">
+                                    <div class="icon-area">
+                                        <i class="fa fa-user text-white"></i>
+                                    </div>
+                                    <span class="text-white">Đăng nhập</span>
+
+                                </a>
+                            } else {
+                                <div class="dropdown">
+                                    <a class="widget-view" role="button" data-bs-toggle="dropdown">
+                                        <div class="icon-area">
+                                            <i class="fa fa-user text-white"></i>
+                                        </div>
+                                        <span class="text-white">Chào, @Context.Session.GetString("_TenTaiKhoanU")</span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-controller="Home" asp-action="Logout">Đăng xuất</a></li>
+                                    </ul>
                                 </div>
-                                @*<a href="#">Trang Admin</a>
-                                <a hrel="~/Home/Logout"> Logout </a>*@
-                                <span class="text-white">Đăng nhập</span>
-                                @*<small class="text-white"> Thông tin của tôi </small>*@
-                            </a>
+                            }
                         </div>
                     </div> <!-- widgets-wrap.// -->
                 </div> <!-- col.// -->

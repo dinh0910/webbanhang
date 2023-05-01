@@ -18,9 +18,8 @@
             </div>
         </section>
 
-        <div class="row">
+        <div class="row mt-3">
             <aside class="col-md-2">
-
                 <article class="filter-group">
                     <h6 class="title">
                         <a href="#" class="dropdown-toggle" data-toggle="collapse" data-target="#collapse_1"> Danh mục </a>
@@ -73,21 +72,28 @@
                                 <div class="card w-100 shadow-lg" style="border-radius: 12px;">
                                     <img src="~/images/products/@item.HinhAnh" class="card-img-top">
                                     <div class="card-body">
-                                        <h5 class="card-title">@item.TenSanPham</h5>
+                                        <h5 class="card-title">
+                                            <a asp-action ="Details" asp-route-id="@item.SanPhamID" role="button">@item.TenSanPham</a>
+                                        </h5>
                                         <p>
                                             @Html.DisplayFor(modelItem => item.ThanhTien)
                                         </p>
-                                        <a href="#" class="btn btn-danger"><i class="fa-solid fa-cart-shopping"></i></a>
-                                        <a href="#" class="btn btn-light"><i class="fa-regular fa-heart text-dark"></i></a>
+                                        <div class="d-grid p-2">
+                                            @if(item.SoLuong > 0)
+                                            {
+                                                <a asp-action="AddToCart" asp-route-id="@item.SanPhamID" class="btn btn-danger"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ</a>
+                                            } else
+                                            {
+                                                <a class="btn btn-danger disabled text-white"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ</a>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     }
                 </div>
-
             </main> <!-- col.// -->
-
         </div>
     </div>
 </section>
