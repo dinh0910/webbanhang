@@ -9,14 +9,14 @@
 <section class="section-content padding-y">
     <div class="container">
 
-        <div class="card mb-3">
-            <div class="card-body">
-                <ol class="breadcrumb float-left">
+        <section class="py-3 bg-light">
+            <div class="container">
+                <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-                    <li class="breadcrumb-item acvite">@dm.TenDanhMuc</li>
+                    <li class="breadcrumb-item acvite" aria-current="page">@dm.TenDanhMuc</li>
                 </ol>
-            </div> <!-- card-body .// -->
-        </div> <!-- card.// -->
+            </div>
+        </section>
 
         <div class="row">
             <aside class="col-md-2">
@@ -29,7 +29,13 @@
                         <div class="inner">
                             <ul class="list-menu">
                                 @foreach(var item in danhmuc){
-                                    <li><a asp-action="Caterogy" asp-route-id="@item.DanhMucID">@item.TenDanhMuc</a></li>
+                                    if(item.DanhMucID == dm.DanhMucID)
+                                    {
+                                        <li class="active">@item.TenDanhMuc</li>
+                                    } else
+                                    {
+                                        <li><a asp-action="Caterogy" asp-route-id="@item.DanhMucID">@item.TenDanhMuc</a></li>
+                                    }
                                 }
                             </ul>
                         </div> <!-- inner.// -->
