@@ -35,6 +35,8 @@ namespace webbanhang.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(TaiKhoanLogin TaiKhoan)
         {
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
             if (ModelState.IsValid)
             {
                 string mahoamatkhau = SHA1.ComputeHash(TaiKhoan.MatKhau);
@@ -74,6 +76,8 @@ namespace webbanhang.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignUp([Bind("Id,TenTaiKhoan,MatKhau")] TaiKhoan TaiKhoan)
         {
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
             if (ModelState.IsValid)
             {
                 var check = _context.TaiKhoan.FirstOrDefault(r => r.TenTaiKhoan == TaiKhoan.TenTaiKhoan);
@@ -120,6 +124,8 @@ namespace webbanhang.Controllers
 
         public ActionResult Logout()
         {
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
             HttpContext.Session.Remove("_TaiKhoanIDU");
             //HttpContext.Session.Remove("_Hoten");
             HttpContext.Session.Remove("_TenTaiKhoanU");
@@ -199,12 +205,16 @@ namespace webbanhang.Controllers
         // Xóa session giỏ hàng
         void ClearCart()
         {
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
             var session = HttpContext.Session;
             session.Remove(CARTKEY);
         }
 
         public async Task<IActionResult> AddToCart(int id)
         {
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
             var product = await _context.SanPham
                 .FirstOrDefaultAsync(m => m.SanPhamID == id);
             if (product == null)
@@ -228,6 +238,8 @@ namespace webbanhang.Controllers
         //[Route("/updateitem", Name = "updateitem")]
         public async Task<IActionResult> UpdateItem(int id, int quantity)
         {
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
             var cart = GetCartItems();
             var item = cart.Find(p => p.SanPham.SanPhamID == id);
             if (quantity == 0)
@@ -241,6 +253,8 @@ namespace webbanhang.Controllers
 
         public async Task<IActionResult> RemoveItem(int id)
         {
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
             var cart = GetCartItems();
             var item = cart.Find(p => p.SanPham.SanPhamID == id);
             if (item != null)
@@ -268,6 +282,8 @@ namespace webbanhang.Controllers
 
         public async Task<IActionResult> CreateBill(string HoTen, string Sdt, string DiaChi, string GhiChu)
         {
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
             // lưu hóa đơn
             var bill = new DonDatHang();
             bill.NgayLap = DateTime.Now;
