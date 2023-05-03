@@ -41,5 +41,7 @@ namespace webbanhang.Data
         public DbSet<webbanhang.Models.NhaCungCap>? NhaCungCap { get; set; }
 
         public DbSet<webbanhang.Models.ThongSo>? ThongSo { get; set; }
+
+        public DbSet<webbanhang.Models.MoTa>? MoTa { get; set; }
     }
 }

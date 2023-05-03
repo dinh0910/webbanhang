@@ -1,0 +1,74 @@
+﻿@model List<webbanhang.Models.CartLove>
+
+<div class="section-content padding-y">
+    <div class="container">
+
+        <section class="py-3 bg-light">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item acvite" aria-current="page">Danh sách yêu thích</li>
+                </ol>
+            </div>
+        </section>
+
+        @if (Model.Count() > 0)
+        {
+            <section class="py-3">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Thành tiền</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="~/images/products/@item.SanPham.HinhAnh" class="img-thumbnail" width="150" height="100" />
+                                </td>
+                                <td class="align-middle">@item.SanPham.TenSanPham</td>
+                                <td class="align-middle">@Html.DisplayFor(modelItem => item.SanPham.ThanhTien)</td>
+                                <td>
+                                    <a asp-action="RemoveItem" asp-route-id="@item.SanPham.SanPhamID"><i class="fa-regular fa-trash-can text-danger"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </section>
+        }
+        else
+        {
+            <div class="row my-5">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <div class="border shadow-lg rounded">
+                        <div class="fw-bold fs-3 text-center pt-3">
+                            <span style="color: #fc544b;">THÔNG BÁO</span>
+                        </div>
+                        <div class="p-5">
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <span class="fs-1">
+                                        <i class="fa-regular fa-face-frown"></i>
+                                    </span>
+                                </div>
+                                <span class="fs-2 fw-bold text-uppercase">KHÔNG CÓ SẢN PHẨM TRONG DANH Sách, VUI LÒNG QUAY LẠI</span>
+                                <div class="my-3">
+                                    <a class="btn btn-danger fs-5 px-3 py-2" href="/">Về trang chủ</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3"></div>
+            </div>
+        }
+    </div>
+</div>

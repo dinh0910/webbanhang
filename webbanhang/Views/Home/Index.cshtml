@@ -33,7 +33,6 @@
                             </ol>
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-
                                     <img src="~/Content/images/banners/viettel1.jpg" alt="First slide">
                                 </div>
                                 <div class="carousel-item">
@@ -67,7 +66,7 @@
             </header><!-- sect-heading -->
             <div class="timer">
                 <p hidden id="countdown"></p>
-                <div> <p class="num bg-danger" id="days"></p><small>Ngày</small></div> 
+                <div> <p class="num bg-danger" id="days"></p><small>Ngày</small></div>
                 <div><p class="num bg-danger" id="hours"></p><small>Giờ</small></div>
                 <div><p class="num bg-danger" id="mins"></p><small>Phút</small></div>
                 <div><p class="num bg-danger" id="secs"></p><small>Giây</small></div>
@@ -108,10 +107,10 @@
             @if (i <= 12)
             {
                 <div class="col-xl-2 col-lg-3 col-md-4 col-6">
-                    <div href="#" class="card card-sm card-product-grid">
-                        <a href="#" class="img-wrap"> <img src="~/images/products/@item.HinhAnh"> </a>
+                    <div class="card card-sm card-product-grid">
+                        <a asp-controller="Home" asp-action="Details" asp-route-id="@item.SanPhamID" class="img-wrap"> <img src="~/images/products/@item.HinhAnh"> </a>
                         <figcaption class="info-wrap">
-                            <a href="#" class="title">@item.TenSanPham</a>
+                            <a asp-controller="Home" asp-action="Details" asp-route-id="@item.SanPhamID" class="title">@item.TenSanPham</a>
                             <div class="price mt-1">@Html.DisplayFor(modelItem => item.ThanhTien)</div>
                         </figcaption>
                     </div>
@@ -125,7 +124,7 @@
 <script>
     function updateCountdown() {
         let now = new Date();
-        let target = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 30, 0, 0, 0);
+        let target = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 0, 0, 0);
         let diff = target - now;
 
         if (diff <= 0) {

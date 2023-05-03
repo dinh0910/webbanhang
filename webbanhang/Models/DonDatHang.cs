@@ -18,6 +18,7 @@ namespace webbanhang.Models
 
         public string? GhiChu { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:#,##0} đ")]
         public int TongTien { get; set; }
 
 

@@ -1,0 +1,145 @@
+﻿@model List<webbanhang.Models.ImportItem>
+
+
+
+<div class="container-fluid" id="container-wrapper">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Danh sách sản phẩm</h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-danger" href="/admin">Dashboard</a></li>
+            <li class="breadcrumb-item"><a class="text-danger" asp-controller="SanPhams" asp-action="Index">Sản phẩm</a></li>
+            <li class="breadcrumb-item"><a class="text-danger" asp-controller="SanPhams" asp-action="Stored">Kho</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Danh sách nhập hàng</li>
+        </ol>
+    </div>
+
+    <a role="button" data-bs-toggle="modal" data-bs-target="#modalCreate" class="btn btn-danger mb-3 text-white">Nhập hàng</a>
+
+    <div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="modalCreateLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="text-center mb-2">
+                        <span class="fw-bold fs-3" style="color:#fc544b">Nhập hàng</span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="p-2">
+                        <form asp-action="AddToCart">
+                            <div class="form-group mb-3">
+                                <label for="SanPhamID" class="control-label">Sản phẩm</label>
+                                <select name="SanPhamID" id="SanPhamID" class="form-control" asp-items="ViewBag.SanPhamID"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="DonViTinhID" class="control-label">Đơn vị tính</label>
+                                <select name="DonViTinhID" id="DonViTinhID" class="form-control" asp-items="ViewBag.DonViTinhID"></select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="SoLuong" class="control-label mb-1">Số lượng</label>
+                                <input type="number" name="SoLuong" id="SoLuong" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Thêm" class="btn btn-danger" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Count > 0)
+    {
+        int amount = 0;
+        int total = 0;
+        <form asp-action="CreateBill">
+            <div class="form-group">
+                <label class="control-label">Nhà cung cấp</label>
+                <select name="NhaCungCapID" class="form-control" asp-items="ViewBag.NhaCungCapID"></select>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Đơn vị tính</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        amount = item.SanPham.ThanhTien * item.SoLuong;
+                        total += amount;
+                        <tr>
+                            <td>
+                                <button class="btn btn-outline-success updatecartitem"
+                                        data-productid="@item.SanPham.SanPhamID">
+                                    Cập nhật
+                                </button>
+                                <a asp-action="RemoveItem" asp-route-id="@item.SanPham.SanPhamID" class="btn btn-outline-danger">
+                                    Xóa
+                                </a>
+                            </td>
+                            <td>
+                                <img src="~/images/products/@Html.DisplayFor(modelItem => item.SanPham.HinhAnh)" width="100" class="img-thumbnail" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SanPham.TenSanPham)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DonViTinh.DonVi)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SanPham.DonGia)
+                            </td>
+                            <td>
+                                <input asp-for="@item.SoLuong" id="@($"quantity-{item.SanPham.SanPhamID}")" />
+                            </td>
+                            <td>
+                                @(amount.ToString("n0")) đ
+                            </td>
+                        </tr>
+                    }
+                    <tr colspan="4">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><b>Tổng tiền</b></td>
+                        <td><i>@(total.ToString("n0")) đ</i></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button type="submit" class="btn btn-warning">Nhập hàng</button>
+        </form>
+        @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $(".updatecartitem").click(function (event) {
+                    event.preventDefault();
+                    var productid = $(this).attr("data-productid");
+                    var quantity = $("#quantity-" + productid).val();
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.RouteUrl("updateitem")",
+                        data: {
+                            id: productid,
+                            quantity: quantity
+                        },
+                        success: function (result) {
+                            window.location.href = "@Url.RouteUrl("import")";
+                        }
+                    });
+                });
+            });
+        </script>
+        }
+    }
+</div>

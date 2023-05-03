@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<webbanhang.Models.SanPham>
+@using Newtonsoft.Json;
 
 @{
     var danhmuc = ViewBag.danhmuc as IQueryable<webbanhang.Models.DanhMuc>;
@@ -49,10 +50,19 @@
                         <strong class="mr-md-auto">Có @Model.Count() sản phẩm được tìm thấy </strong>
                     </div>
                 </header><!-- sect-heading -->
+                @{
+                    var jsoncartlove = Context.Request.Cookies[$"{Context.Session.GetInt32("_TaiKhoanIDU")}_cartlove"];
+                    var loves = new List<CartLove>();
+                    if (!string.IsNullOrEmpty(jsoncartlove))
+                    {
+                        loves = JsonConvert.DeserializeObject<List<CartLove>>(jsoncartlove);
+                    }
+                }
 
                 <div class="row mt-3">
                     @foreach (var item in Model)
                     {
+                        var loved = loves.FirstOrDefault(loveyou => loveyou.SanPham.SanPhamID == item.SanPhamID);
                         <div class="col-sm-3">
                             <div class="p-2">
                                 <div class="card w-100 shadow-lg" style="border-radius: 12px;">
@@ -64,14 +74,30 @@
                                         <p>
                                             @Html.DisplayFor(modelItem => item.ThanhTien)
                                         </p>
-                                        <div class="d-grid p-2">
+                                        <div class="d-grid p-2 gap-2 d-md-block">
                                             @if (item.SoLuong > 0)
                                             {
-                                                <a asp-action="AddToCart" asp-route-id="@item.SanPhamID" class="btn btn-danger"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ</a>
+                                                <a asp-action="AddToCart" asp-route-id="@item.SanPhamID" class="btn btn-danger me-3"><i class="fa-solid fa-cart-shopping"></i></a>
+                                                if (loved != null)
+                                                {
+                                                    <a asp-controller="Home" asp-action="RemoveItemLove" asp-route-id="@item.SanPhamID"><i class="fa-solid fa-heart text-danger"></i></a>
+                                                }
+                                                else
+                                                {
+                                                    <a asp-controller="Home" asp-action="AddToCartLove" asp-route-id="@item.SanPhamID"><i class="fa-regular fa-heart text-danger"></i></a>
+                                                }
                                             }
                                             else
                                             {
-                                                <a class="btn btn-danger disabled text-white"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ</a>
+                                                <a class="btn btn-danger disabled text-white"><i class="fa-solid fa-cart-shopping"></i></a>
+                                                if (loved != null)
+                                                {
+                                                    <a asp-controller="Home" asp-action="RemoveItemLove" asp-route-id="@item.SanPhamID"><i class="fa-solid fa-heart text-danger"></i></a>
+                                                }
+                                                else
+                                                {
+                                                    <a asp-controller="Home" asp-action="AddToCartLove" asp-route-id="@item.SanPhamID"><i class="fa-regular fa-heart text-danger"></i></a>
+                                                }
                                             }
                                         </div>
                                     </div>

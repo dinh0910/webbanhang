@@ -1,0 +1,48 @@
+﻿@model webbanhang.Models.TaiKhoan
+
+<section class="section-content padding-y">
+    <div class="container">
+        <section class="py-3 bg-light">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item acvite" aria-current="page">Thông tin của tôi</li>
+                </ol>
+            </div>
+        </section>
+
+        <div class="row my-5">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <div class="border shadow-lg rounded">
+                    <div class="fw-bold fs-3 text-center pt-3">
+                        <span style="color: #fc544b;">THÔNG TIN CÁ NHÂN</span>
+                    </div>
+                    <div class="p-5">
+                        <form asp-action="Info">
+                            <input type="hidden" asp-for="TaiKhoanID" />
+                            <input type="hidden" asp-for="TenTaiKhoan" value="@Context.Session.GetString("_TenTaiKhoanU")" />
+                            <input type="hidden" asp-for="MatKhau" value="@Context.Session.GetString("_MatKhauU")" />
+                            <div class="form-group mb-3">
+                                <label asp-for="HoTen" class="control-label">Họ và tên</label>
+                                <input class="form-control" type="text" asp-for="HoTen" placeholder="Họ và tên của bạn">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Sdt" class="control-label">Số điện thoại</label>
+                                <input class="form-control" type="text" asp-for="Sdt" placeholder="Số điện thoại của bạn" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="DiaChi" class="control-label">Địa chỉ</label>
+                                <input class="form-control" type="text" asp-for="DiaChi" placeholder="Địa chỉ của bạn" />
+                            </div>
+                            <div class="d-grid">
+                                <input type="submit" value="Chỉnh sửa thông tin" class="btn text-white col fw-semibold text-uppercase" style="background-color:#fc544b" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+</section>

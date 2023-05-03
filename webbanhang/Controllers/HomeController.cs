@@ -6,6 +6,7 @@ using System.Diagnostics;
 using webbanhang.Data;
 using webbanhang.Libs;
 using webbanhang.Models;
+using XAct.UI.Views;
 
 namespace webbanhang.Controllers
 {
@@ -52,7 +53,14 @@ namespace webbanhang.Controllers
                     HttpContext.Session.SetString(SessionMK, taiKhoan.MatKhau);
                     //HttpContext.Session.SetString(SessionHoten, taiKhoan.HoTen);
                     //HttpContext.Session.SetString(SessionEmail, taiKhoan.Email);
-                    //HttpContext.Session.SetString(SessionSDT, taiKhoan.SoDienThoai);
+                    if(taiKhoan.Sdt == null)
+                    {
+                        _notifyService.Success("Đăng nhập thành công!");
+                        return RedirectToAction("Index", "Home");
+                    } else
+                    {
+                        HttpContext.Session.SetString(SessionSDT, taiKhoan.Sdt);
+                    }
                     //HttpContext.Session.SetString(SessionDiaChi, taiKhoan.DiaChi);
 
                     _notifyService.Success("Đăng nhập thành công!");
@@ -115,6 +123,7 @@ namespace webbanhang.Controllers
             //HttpContext.Session.Remove("_Hoten");
             HttpContext.Session.Remove("_TenTaiKhoanU");
             HttpContext.Session.Remove("_MatKhauU");
+            HttpContext.Session.Remove("_SDTU");
             //HttpContext.Session.Remove("_Quyen");
             //HttpContext.Session.Remove("_HinhAnh");
             //HttpContext.Session.Remove("_Email");
@@ -149,7 +158,8 @@ namespace webbanhang.Controllers
             ViewBag.danhmuc = _context.DanhMuc;
             ViewBag.thuonghieu = _context.ThuongHieu;
             ViewBag.hinhanh = _context.HinhAnh.Include(ha => ha.SanPham);
-            ViewBag.thongso = _context.ThongSo.Include(so => so.SanPham);   
+            ViewBag.thongso = _context.ThongSo.Include(so => so.SanPham);
+            ViewBag.mota = _context.MoTa;
             return View(sp);
         }
 
@@ -270,7 +280,6 @@ namespace webbanhang.Controllers
 
             var cart = GetCartItems();
             int amount = 0;
-            int soLuong = 0;
 
             //chi tiết hóa đơn
             foreach (var i in cart)
@@ -290,10 +299,10 @@ namespace webbanhang.Controllers
             }
             await _context.SaveChangesAsync();
             ClearCart();
-            return RedirectToAction(nameof(Message));
+            return RedirectToAction(nameof(Success));
         }
 
-        public IActionResult Message()
+        public IActionResult Success()
         {
             ViewBag.danhmuc = _context.DanhMuc;
             ViewBag.thuonghieu = _context.ThuongHieu;
@@ -306,6 +315,96 @@ namespace webbanhang.Controllers
             ViewBag.danhmuc = _context.DanhMuc;
             ViewBag.thuonghieu = _context.ThuongHieu;
             return View(await sp.ToListAsync());
+        }
+
+        List<CartLove> GetCartsLove()
+        {
+            var jsoncartlove = HttpContext.Request.Cookies[$"{HttpContext.Session.GetInt32("_TaiKhoanIDU")}_cartlove"];
+            if (!string.IsNullOrEmpty(jsoncartlove))
+            {
+                return JsonConvert.DeserializeObject<List<CartLove>>(jsoncartlove);
+            }
+            return new List<CartLove>();
+        }
+
+        void SaveCartLoveSession(List<CartLove> love)
+        {
+            string jsoncartlove = JsonConvert.SerializeObject(love);
+            HttpContext.Response.Cookies.Append($"{HttpContext.Session.GetInt32(SessionTK)}_cartlove", jsoncartlove);
+        }
+
+        public async Task<IActionResult> AddToCartLove(int id)
+        {
+            if (HttpContext.Session.GetInt32("_TaiKhoanIDU") != null)
+            {
+                ViewBag.danhmuc = _context.DanhMuc;
+                var product = await _context.SanPham
+                    .FirstOrDefaultAsync(m => m.SanPhamID == id);
+                var cart = GetCartsLove();
+                cart.Add(new CartLove() { SanPham = product });
+
+                SaveCartLoveSession(cart);
+                return RedirectToAction(nameof(ViewLoved));
+            }
+            return RedirectToAction("Login", "Home");
+        }
+
+        public async Task<IActionResult> RemoveItemLove(int id)
+        {
+            var cart = GetCartsLove();
+            var item = cart.Find(p => p.SanPham.SanPhamID == id);
+            if (item != null)
+            {
+                cart.Remove(item);
+            }
+            SaveCartLoveSession(cart);
+            return RedirectToAction(nameof(ViewLoved));
+        }
+
+        public IActionResult ViewLoved()
+        {
+            if (HttpContext.Session.GetInt32("_TaiKhoanIDU") != null)
+            {
+                ViewBag.danhmuc = _context.DanhMuc;
+                ViewBag.thuonghieu = _context.ThuongHieu;
+                return View(GetCartsLove());
+            }
+            return RedirectToAction("Login", "Home");
+        }
+
+        public async Task<IActionResult> Ordered(string? sdt)
+        {
+            var d = _context.DonDatHang.Where(d => d.Sdt == sdt);
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
+            return View(d);
+        }
+
+        public async Task<IActionResult> DetailOrdered(int? id)
+        {
+            var d = _context.ChiTietDH.Where(d => d.DonDatHangID == id);
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
+            return View(d);
+        }
+
+        public async Task<IActionResult> Info(int? id)
+        {
+            var tk = await _context.TaiKhoan.FindAsync(id);
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
+            return View(tk);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Info([Bind("TaiKhoanID", "TenTaiKhoan", "MatKhau", "HoTen", "Sdt", "DiaChi")] TaiKhoan tk)
+        {
+            _context.Update(tk);
+            ViewBag.danhmuc = _context.DanhMuc;
+            ViewBag.thuonghieu = _context.ThuongHieu;
+            await _context.SaveChangesAsync();
+            return View(tk);
         }
     }
 }

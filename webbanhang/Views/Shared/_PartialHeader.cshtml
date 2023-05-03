@@ -5,6 +5,7 @@
     var dm = ViewBag.danhmuc as IQueryable<webbanhang.Models.DanhMuc>;
     var th = ViewBag.thuonghieu as IQueryable<webbanhang.Models.ThuongHieu>;
     var c = 0;
+    var l = 0;
 }
 
 <header class="section-header" style="background-color: #FC544B;">
@@ -18,9 +19,9 @@
                     </a> <!-- brand-wrap.// -->
                 </div>
                 <div class="col-xl-6">
-                    <form action="#" class="search-header">
+                    <form asp-controller="Home" asp-action="Search" class="search-header">
                         <div class="input-group w-100">
-                            <input type="text" class="form-control " placeholder="Bạn muốn tìm sản phẩm?">
+                            <input type="text" class="form-control" name="search" placeholder="Bạn muốn tìm sản phẩm?">
                             <div class="input-group-append">
                                 <button class="btn btn-danger" type="submit">
                                     <i class="fa fa-search "></i> Tìm kiếm
@@ -40,6 +41,28 @@
                                 c = cart.Count;
                             }
                         }
+                        @{
+                            string jsoncartl = Context.Request.Cookies[$"{Context.Session.GetInt32("_TaiKhoanIDU")}_cartlove"];
+                            if (jsoncartl != null)
+                            {
+                                var cartloved = JsonConvert.DeserializeObject<List<CartLove>>(jsoncartl);
+                                l = cartloved.Count;
+                            }
+                        }
+                        <div class="widget-header mr-3">
+                            <a asp-controller="Home" asp-action="ViewLoved" class="widget-view">
+                                <div class="icon-area">
+                                    @if (Context.Session.GetInt32("_TaiKhoanIDU") == null)
+                                    {
+                                        <i class="fa-solid fa-heart text-white"></i>
+                                    } else
+                                    {
+                                        <i class="fa-solid fa-heart text-white"></i>
+                                        <span class="notify">@l</span>
+                                    }
+                                </div>
+                            </a>
+                        </div>
 
                         <div class="widget-header mr-3">
                             <a asp-controller="Home" asp-action="ViewCart" class="widget-view">
@@ -47,7 +70,6 @@
                                     <i class="fa fa-shopping-cart text-white"></i>
                                     <span class="notify">@c</span>
                                 </div>
-                                @*<small class="text-white"> Giỏ hàng </small>*@
                             </a>
                         </div>
                         <div class="widget-header">
@@ -58,7 +80,6 @@
                                         <i class="fa fa-user text-white"></i>
                                     </div>
                                     <span class="text-white">Đăng nhập</span>
-
                                 </a>
                             } else {
                                 <div class="dropdown">
@@ -69,6 +90,12 @@
                                         <span class="text-white">Chào, @Context.Session.GetString("_TenTaiKhoanU")</span>
                                     </a>
                                     <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-controller="Home" asp-action="Info" asp-route-id="@Context.Session.GetInt32("_TaiKhoanIDU")">Thông tin của tôi</a></li>
+                                        @if (Context.Session.GetString("_SDTU") != null)
+                                        {
+                                            <li><a class="dropdown-item" asp-controller="Home" asp-action="Ordered" asp-route-sdt="@Context.Session.GetString("_SDTU")">Đơn hàng của tôi</a></li>
+                                        }
+                                        <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item" asp-controller="Home" asp-action="Logout">Đăng xuất</a></li>
                                     </ul>
                                 </div>
@@ -107,22 +134,22 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="#">Mua máy kèm gói cước</a>
+                        <a class="nav-link text-danger" target="_blank" href="https://viettelstore.vn/landing/subsidy-mua-dien-thoai-kem-goi-cuoc-viettel.html">Mua máy kèm gói cước</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="#">Trả góp</a>
+                        <a class="nav-link text-danger" target="_blank" href="https://viettelstore.vn/uu-dai-tra-gop">Trả góp</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="#">Mua online giá rẻ</a>
+                        <a class="nav-link text-danger" target="_blank" href="https://viettelstore.vn/landing/doc-quyen-online.html">Mua online giá rẻ</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-danger" data-toggle="dropdown" href="#">Tin tức</a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Tin khuyến mãi</a>
-                            <a class="dropdown-item" href="#">Tin dịch vụ</a>
-                            <a class="dropdown-item" href="#">Tin công nghệ</a>
-                            <a class="dropdown-item" href="#">Thủ thuật</a>
-                            <a class="dropdown-item" href="#">Game/Ứng dụng hay</a>
+                            <a class="dropdown-item" target="_blank" href="https://viettelstore.vn/chuyen-muc-tin/tin-khuyen-mai">Tin khuyến mãi</a>
+                            <a class="dropdown-item" target="_blank" href="https://viettelstore.vn/chuyen-muc-tin/tin-dich-vu">Tin dịch vụ</a>
+                            <a class="dropdown-item" target="_blank" href="https://viettelstore.vn/chuyen-muc-tin/tin-dich-vu">Tin công nghệ</a>
+                            <a class="dropdown-item" target="_blank" href="https://viettelstore.vn/chuyen-muc-tin/thu-thuat">Thủ thuật</a>
+                            <a class="dropdown-item" target="_blank" href="https://viettelstore.vn/chuyen-muc-tin/game-hay">Game/Ứng dụng hay</a>
                         </div>
                     </li>
                 </ul>

@@ -1,0 +1,76 @@
+﻿@model List<webbanhang.Models.DonDatHang>
+
+<div class="section-content padding-y">
+    <div class="container">
+
+        <section class="py-3 bg-light">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item acvite" aria-current="page">Đơn hàng của tôi</li>
+                </ol>
+            </div>
+        </section>
+
+        @if (Model.Count() > 0)
+        {
+            <section class="py-3">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ngày lập</th>
+                            <th>Họ tên</th>
+                            <th>Số điện thoại</th>
+                            <th>Địa chỉ</th>
+                            <th>Ghi chú</th>
+                            <th>Tổng tiền</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItel => item.NgayLap)</td>
+                                <td>@item.HoTen</td>
+                                <td>@item.Sdt</td>
+                                <td>@item.DiaChi</td>
+                                <td>@item.GhiChu</td>
+                                <td>@Html.DisplayFor(modelItem => item.TongTien)</td>
+                                <th><a asp-controller="Home" asp-action="DetailOrdered" asp-route-id="@item.DonDatHangID"><i class="fa-solid fa-circle-info"></i></a></th>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </section>
+        }
+        else
+        {
+            <div class="row my-5">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <div class="border shadow-lg rounded">
+                        <div class="fw-bold fs-3 text-center pt-3">
+                            <span style="color: #fc544b;">THÔNG BÁO</span>
+                        </div>
+                        <div class="p-5">
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <span class="fs-1">
+                                        <i class="fa-regular fa-face-frown"></i>
+                                    </span>
+                                </div>
+                                <span class="fs-2 fw-bold">bạn không có đơn hàng nào, VUI LÒNG đặt hàng</span>
+                                <div class="my-3">
+                                    <a class="btn btn-danger fs-5 px-3 py-2" href="/">Về trang chủ</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3"></div>
+            </div>
+        }
+    </div>
+</div>

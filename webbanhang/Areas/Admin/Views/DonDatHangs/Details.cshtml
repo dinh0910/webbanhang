@@ -2,32 +2,82 @@
 
 @{
     ViewData["Title"] = "Details";
+    var ctdh = ViewBag.ctdh as IQueryable<webbanhang.Models.ChiTietDH>;
+    var i = 1;
+    var t = 0;
 }
 
 <div class="container-fluid" id="container-wrapper">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">DataTables</h1>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="./">Home</a></li>
-            <li class="breadcrumb-item">Tables</li>
-            <li class="breadcrumb-item active" aria-current="page">DataTables</li>
-        </ol>
+    <div>
+        <button class="btn btn-info" id="print" onclick="printContent('printerDiv');">Print</button>
     </div>
-</div>
 
-<div class="row">
-    <!-- Datatables -->
-    <div class="col-lg-12">
-        <div class="card mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">DataTables</h6>
-            </div>
-            <div class="table-responsive p-3">
-                <table class="table align-items-center table-flush" id="dataTable">
-                    <thead style="background-color: #FCEAEC;">
-                    </thead>
-                </table>
-            </div>
-        </div>
+    <div class="page-inner" id="printerDiv">
+        <h4 class="mb-3" style="font-size:15px;">Công ty CP Công trình Viettel</h4>
+        <h4 class="mb-3" style="font-size:15px;">Địa chỉ: 269B, Nguyễn Thái Học, Phường Mỹ Hoà, Thành Phố Long Xuyên, Tỉnh An Giang, Việt Nam</h4>
+        <div class="text-center text-uppercase fs-3 fw-bold">Đơn đặt hàng</div>
+        <h4 class="mb-3" style="font-size:15px;">Tên khách hàng: @Model.HoTen</h4>
+        <h4 class="mb-3" style="font-size:15px;">Số điện thoại: @Model.Sdt</h4>
+        <h4 class="mb-3" style="font-size:15px;">Địa chỉ: @Model.DiaChi</h4>
+        <h4 class="mb-3" style="font-size:15px;">Ghi chú: @Model.GhiChu</h4>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        Tên sản phẩm
+                    </th>
+                    <th>
+                        Đơn giá
+                    </th>
+                    <th>
+                        Số lượng
+                    </th>
+                    <th>
+                        Thành tiền
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ctdh)
+                {
+                    if (item.DonDatHangID == Model.DonDatHangID)
+                    {
+                        t += item.ThanhTien;
+                        <tr>
+                            <td>
+                                @(i++)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SanPham.TenSanPham)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DonGia)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SoLuong)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ThanhTien)
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <h4 class="mb-3" style="font-size:15px;">Tổng tiền: @(t.ToString("n0"))đ</h4>
     </div>
 </div>
+<script>
+    function printContent(el) {
+        var restorepage = $('body').html();
+        var printcontent = $('#' + el).clone();
+        $('body').empty().html(printcontent);
+        window.print();
+        $('body').html(restorepage);
+    }
+</script>

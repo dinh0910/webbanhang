@@ -3,6 +3,7 @@
 @{
     var ha = ViewBag.hinhanh as IQueryable<webbanhang.Models.HinhAnh>;
     var ts = ViewBag.thongso as IQueryable<webbanhang.Models.ThongSo>;
+    var mt = ViewBag.mota as IQueryable<webbanhang.Models.MoTa>;
 }
 
 <section class="section-content padding-y">
@@ -26,9 +27,17 @@
                                 @foreach(var item in ha){
                                     if (item.SanPhamID == Model.SanPhamID)
                                     {
-                                        <div class="carousel-item active">
-                                            <img src="~/images/products/@item.Anh" class="d-block w-75 mx-auto" height="400">
-                                        </div>
+                                        if (item.Active == "active")
+                                        {
+                                            <div class="carousel-item active">
+                                                <img src="~/images/products/@item.Anh" class="d-block w-75 mx-auto" height="400">
+                                            </div>
+                                        } else
+                                        {
+                                            <div class="carousel-item">
+                                                <img src="~/images/products/@item.Anh" class="d-block w-75 mx-auto" height="400">
+                                            </div>
+                                        }
                                     }
                                 }
                             </div>
@@ -66,17 +75,6 @@
                             </dl>
 
                             <div class="form-row  mt-4">
-                                <div class="form-group col-md flex-grow-0">
-                                    <div class="input-group mb-3 input-spinner">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-light" type="button" id="button-plus"> + </button>
-                                        </div>
-                                        <input type="text" class="form-control" value="1">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-light" type="button" id="button-minus"> &minus; </button>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="form-group col-md">
                                     @if (Model.SoLuong > 0)
                                     {
@@ -103,10 +101,19 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="box">
-                            <h5 class="title-description">Thông số kỹ thuật</h5>
+                            <h5 class="title-description">Mô tả sản phẩm</h5>
+                            @foreach(var item in mt){
+                                @Html.Raw(item.NoiDungMoTa)
+                            }
+                        </div>
+                    </div>
 
+                    <aside class="col-md-4">
+                        <div class="box">
+                            <h5 class="title-description">Thông số kỹ thuật</h5>
                             <table class="table table-bordered">
-                                @foreach(var item in ts){
+                                @foreach (var item in ts)
+                                {
                                     @if (item.SanPhamID == Model.SanPhamID)
                                     {
                                         <tr>
@@ -120,13 +127,6 @@
                                     }
                                 }
                             </table>
-                        </div>
-                    </div>
-
-                    <aside class="col-md-4">
-                        <div class="box">
-                            <h5 class="title-description"></h5>
-                            
                         </div>
                     </aside>
                 </div>
