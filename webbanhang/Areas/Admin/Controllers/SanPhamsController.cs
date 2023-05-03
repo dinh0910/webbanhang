@@ -68,8 +68,8 @@ namespace webbanhang.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["DanhMucID"] = new SelectList(_context.DanhMuc, "DanhMucID", "DanhMucID", sanPham.DanhMucID);
-            ViewData["ThuongHieuID"] = new SelectList(_context.ThuongHieu, "ThuongHieuID", "ThuongHieuID", sanPham.ThuongHieuID);
+            ViewData["DanhMucID"] = new SelectList(_context.DanhMuc, "DanhMucID", "TenDanhMuc");
+            ViewData["ThuongHieuID"] = new SelectList(_context.ThuongHieu, "ThuongHieuID", "TenThuongHieu");
             return View(sanPham);
         }
 
@@ -89,10 +89,7 @@ namespace webbanhang.Areas.Admin.Controllers
             {
                 try
                 {
-                    if(file != null)
-                    {
-                        sanPham.HinhAnh = Upload(file);
-                    }
+                    sanPham.HinhAnh = Upload(file);
                     _context.Update(sanPham);
                     await _context.SaveChangesAsync();
                 }
@@ -109,8 +106,8 @@ namespace webbanhang.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DanhMucID"] = new SelectList(_context.DanhMuc, "DanhMucID", "DanhMucID", sanPham.DanhMucID);
-            ViewData["ThuongHieuID"] = new SelectList(_context.ThuongHieu, "ThuongHieuID", "ThuongHieuID", sanPham.ThuongHieuID);
+            ViewData["DanhMucID"] = new SelectList(_context.DanhMuc, "DanhMucID", "TenDanhMuc", sanPham.DanhMucID);
+            ViewData["ThuongHieuID"] = new SelectList(_context.ThuongHieu, "ThuongHieuID", "TenThuongHieu", sanPham.ThuongHieuID);
             return View(sanPham);
         }
 

@@ -107,6 +107,7 @@ namespace webbanhang.Controllers
             var sp = _context.SanPham.Include(s => s.DanhMuc).Include(s => s.ThuongHieu);
             ViewBag.danhmuc = _context.DanhMuc;
             ViewBag.thuonghieu = _context.ThuongHieu;
+            ViewBag.banner = _context.Banner;
             return View(await sp.ToListAsync());
         }
 

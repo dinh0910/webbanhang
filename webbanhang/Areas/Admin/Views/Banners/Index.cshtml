@@ -63,6 +63,7 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.HinhAnh)
                                 </th>
+                                <th>Active</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -73,7 +74,9 @@
                                     <td>@(i++)</td>
                                     <td>
                                         <img src="~/images/banners/@Html.DisplayFor(modelItem => item.HinhAnh)" class="img-thumbnail" width="150" />
-
+                                    </td>
+                                    <td>
+                                        @item.AnhDau
                                     </td>
                                     <td>
                                         <a class="btn bg-gradient-danger" role="button" data-bs-toggle="modal" data-bs-target="#modalDelete@(i)">

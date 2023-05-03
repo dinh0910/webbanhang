@@ -3,8 +3,10 @@
 @{
     ViewData["Title"] = "Home Page";
     var dm = ViewBag.danhmuc as IQueryable<webbanhang.Models.DanhMuc>;
+    var b = ViewBag.banner as IQueryable<webbanhang.Models.Banner>;
     var i = 1;
     var j = 1;
+    var k = 1;
 }
 
     <section class="section-main padding-y">
@@ -26,21 +28,21 @@
 
                         <!-- ================== COMPONENT SLIDER  BOOTSTRAP  ==================  -->
                         <div id="carousel1_indicator" class="slider-home-banner carousel slide" data-ride="carousel">
-                            <ol class="carousel-indicators">
-                                <li data-target="#carousel1_indicator" data-slide-to="0" class="active"></li>
-                                <li data-target="#carousel1_indicator" data-slide-to="1"></li>
-                                <li data-target="#carousel1_indicator" data-slide-to="2"></li>
-                            </ol>
+
                             <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="~/Content/images/banners/viettel1.jpg" alt="First slide">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="~/Content/images/banners/viettel2.png" alt="Second slide">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="~/Content/images/banners/viettel3.jpg" alt="Third slide">
-                                </div>
+                                @foreach(var item in b){
+                                    if(item.AnhDau == "active")
+                                    {
+                                        <div class="carousel-item active">
+                                            <img src="~/images/banners/@item.HinhAnh" alt="Second slide">
+                                        </div>
+                                    } else
+                                    {
+                                        <div class="carousel-item">
+                                            <img src="~/images/banners/@item.HinhAnh" alt="Second slide">
+                                        </div>
+                                    }
+                                }
                             </div>
                             <a class="carousel-control-prev" href="#carousel1_indicator" role="button" data-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>

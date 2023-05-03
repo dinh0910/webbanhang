@@ -1,1 +1,88 @@
-﻿<h1>We are building!</h1>
+﻿@{
+    var thangHienTai = DateTime.Today.Month;
+    var doanhthu = (List<int?>)ViewData["doanhthu"];
+    var doanhthuthang = (List<int?>)ViewData["doanhthuthang"];
+    var month = (int)ViewData["month"];
+    var firstDayOfMonth = new DateTime(DateTime.Today.Year, (int)month, 1);
+    var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+    var j = 0;
+}
+
+<div class="container-fluid" id="container-wrapper">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Biểu đồ báo cáo thống kê doanh thu</h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-danger" href="/admin">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Báo cáo doanh thu</li>
+        </ol>
+    </div>
+    <div class="row mt-5">
+        <div class="col">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar me-1"></i>
+                    Biểu đồ biểu thị doanh thu hàng ngày trong tháng
+                </div>
+                <div class="card-body"><canvas id="myChart" style="width: 100%; height: 500px;"></canvas></div>
+                <div class="card-footer small text-muted">
+                    <form class="d-flex flex-row" action="/admin/baocaos/index" method="get">
+                        <div style="width: 150px;">
+                            <select class="form-select" aria-label="Default select example" name="month">
+                                @for (var i = 1; i <= 12; i++)
+                                {
+                                    if (i == month)
+                                    {
+                                        <option value="@i" selected>Tháng @i</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@i">Tháng @i</option>
+
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="mx-3">
+                            <input class="btn btn-outline-primary" type="submit" value="Báo Cáo" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dsSanLuong" style="text-align:center; padding-bottom:10px; font-family:'Times New Roman', Times, serif;">
+        @for (var i = 0; i < lastDayOfMonth.Day; i++)
+        {
+            <button class="btn btn-primary" data-value="@doanhthu[i]" data-name="@(i + 1)" readonly style="visibility:hidden"> @doanhthu[i] </button>
+        }
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script>
+        var dssanluong = document.querySelector("#dsSanLuong");
+        var valueSanLuong = dssanluong.querySelectorAll("button");
+        var nameChar = Array.from(valueSanLuong, (data) => { return data.dataset.name; });
+        var valueChar = Array.from(valueSanLuong, (data) => { return parseInt(data.dataset.value); });
+        console.log(valueChar)
+        const labels = nameChar;
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu',
+                backgroundColor: '#fc544b',
+                borderColor: '#fc544b',
+                data: valueChar,
+            }]
+        };
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {}
+        };
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+</div>
